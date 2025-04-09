@@ -1,26 +1,16 @@
-import express from "express";
-const app = express();
+import mongoose from "mongoose";
+import { DB_NAME } from "./constants.js";
+import dotenv from "dotenv";
+import { app } from "./app.js";
+import connectDB from "./db/index.js";
+const port = process.env.PORT || 8000;
 
-app.get("/", (req, res) => {
-  res.send("server is running😍");
-});
+dotenv.config();
 
-app.get("/emp", (req, res) => {
-  const employee = [
-    {
-      name: "kazi",
-      age: 35,
-    },
-    {
-      name: "hasib",
-      age: 56,
-    },
-  ];
-  res.send(employee);
-});
-
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => {
-  console.log(`server is running on port: ${port}`);
-});
+connectDB()
+  .then(() =>
+    app.listen(port, () => {
+      console.log(`server is running on port : ${port}`);
+    })
+  )
+  .catch((err) => console.log("mongodb connection failed", err));
